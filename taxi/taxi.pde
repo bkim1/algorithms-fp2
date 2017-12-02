@@ -199,8 +199,7 @@ void ourMove(int i){
       else if (passengers[closest].destX-cars[i].xpos < -500) {
         cars[i].changeDirection(0);
       }
-      
-      
+      // Otherwise have car move in correct direction
       if(passengers[closest].destX >= cars[i].xpos){
         cars[i].changeDirection(0);
       }else{
@@ -216,6 +215,7 @@ void ourMove(int i){
       else if (passengers[closest].destY-cars[i].ypos < -250) {
         cars[i].changeDirection(3);
       }
+      // Otherwise have car move in correct direction
       if(passengers[closest].destY >= cars[i].ypos){
         cars[i].changeDirection(2);
       }else{
