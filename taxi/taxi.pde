@@ -30,7 +30,7 @@ final int numCars = 6;
 color oppoColor = color(255,0,0);
 color ourColor = color(0,255,0);
 final float carSpeed = 0.5; 
-Car[] cars;
+Car[] cars; 
 float ourScore = 0;
 float oppoScore = 0;
 
@@ -48,7 +48,7 @@ boolean ifStop = false;
 int curFrame = 1;
 int finalFrame = 10000;
 // choose the seed for your random numbers
-int rSeed = 0;
+int rSeed = (int)random(0,20);
 
 
 
@@ -172,16 +172,18 @@ void draw() {
 // IMPLEMENT YOUR STRATEGY HERE
 // ****************************
 void ourMove(int i){
+  // Randomly move the car in the same direction for 150 frames
+  // If there are no passengers
   if(cars[i].numPassenger == 0){
     if(curFrame % 150 == 0){
       cars[i].changeDirection(int(random(0,4)));
     }
   }
   else {
-    int closest = cars[i].passengerList[0];
+    int nextDropOff = cars[i].passengerList[0];
     float bestRatio = Float.POSITIVE_INFINITY;
     
-    // Get passenger with the shortest distance to dest
+    // Get passenger with the shortest distance to dest/fare combo
     int numPass = 0;
     for (int j : cars[i].passengerList) {
       if (numPass >= cars[i].numPassenger) { break; }
@@ -189,41 +191,42 @@ void ourMove(int i){
       float dist = (float)(Math.pow((Math.pow(p.destX - cars[i].xpos, 2) 
                                      + Math.pow(p.destY - cars[i].ypos, 2)), 0.5));
       
-      // Ratio for priority == 40% dist, 60% fare
-      float ratio = dist * 0.4 - p.fare * 0.6;
-      if (ratio < bestRatio) {
-        bestRatio = ratio;
-        closest = j;
+      // Ratio for priority --> 40% dist, 60% fare
+      float currRatio = dist * 0.4 - p.fare * 0.6;
+      if (currRatio < bestRatio) {
+        bestRatio = currRatio;
+        nextDropOff = j;
       }
       numPass++;
     }
     
-    if(abs(passengers[closest].destX-cars[i].xpos) > 10){
+    // Move the car towards the next drop off
+    if(abs(passengers[nextDropOff].destX-cars[i].xpos) > 10){
       // Force car to wrap around the frame
-      if (passengers[closest].destX-cars[i].xpos > 500) {
+      if (passengers[nextDropOff].destX-cars[i].xpos > 500) {
         cars[i].changeDirection(1);
       }
-      else if (passengers[closest].destX-cars[i].xpos < -500) {
+      else if (passengers[nextDropOff].destX-cars[i].xpos < -500) {
         cars[i].changeDirection(0);
       }
       // Otherwise have car move in correct direction
-      if(passengers[closest].destX >= cars[i].xpos){
+      if(passengers[nextDropOff].destX >= cars[i].xpos){
         cars[i].changeDirection(0);
       }else{
         cars[i].changeDirection(1);
       } 
     }
     
-    if(abs(passengers[closest].destY-cars[i].ypos) > 10){
+    if(abs(passengers[nextDropOff].destY-cars[i].ypos) > 10){
       // Force car to wrap around the frame
-      if (passengers[closest].destY-cars[i].ypos > 250) {
+      if (passengers[nextDropOff].destY-cars[i].ypos > 250) {
         cars[i].changeDirection(3);
       }
-      else if (passengers[closest].destY-cars[i].ypos < -250) {
+      else if (passengers[nextDropOff].destY-cars[i].ypos < -250) {
         cars[i].changeDirection(2);
       }
       // Otherwise have car move in correct direction
-      if(passengers[closest].destY >= cars[i].ypos){
+      if(passengers[nextDropOff].destY >= cars[i].ypos){
         cars[i].changeDirection(2);
       }else{
         cars[i].changeDirection(3);
