@@ -172,6 +172,57 @@ void draw() {
 // IMPLEMENT YOUR STRATEGY HERE
 // ****************************
 void ourMove(int i){
+  if(cars[i].numPassenger == 0){
+    if(curFrame % 150 == 0){
+      cars[i].changeDirection(int(random(0,4)));
+    }
+  }
+  else {
+    int closest = cars[i].passengerList[0];
+    float min_dist = Float.POSITIVE_INFINITY;
+    
+    // Get passenger with the shortest distance to dest
+    for (int j : cars[i].passengerList) {
+      Passenger p = passengers[j];
+      float dist = (float)(Math.pow((Math.pow(p.destX - cars[i].xpos, 2) + Math.pow(p.destY - cars[i].ypos, 2)), 0.5));
+      if (dist < min_dist) {
+        min_dist = dist;
+        closest = j;
+      }
+    }
+    
+    if(abs(passengers[closest].destX-cars[i].xpos) > 10){
+      // Force car to wrap around the frame
+      if (passengers[closest].destX-cars[i].xpos > 500) {
+        cars[i].changeDirection(1);
+      }
+      else if (passengers[closest].destX-cars[i].xpos < -500) {
+        cars[i].changeDirection(0);
+      }
+      
+      
+      if(passengers[closest].destX >= cars[i].xpos){
+        cars[i].changeDirection(0);
+      }else{
+        cars[i].changeDirection(1);
+      }
+    }
+    
+    if(abs(passengers[closest].destY-cars[i].ypos) > 10){
+      // Force car to wrap around the frame
+      if (passengers[closest].destY-cars[i].ypos > 250) {
+        cars[i].changeDirection(2);
+      }
+      else if (passengers[closest].destY-cars[i].ypos < -250) {
+        cars[i].changeDirection(3);
+      }
+      if(passengers[closest].destY >= cars[i].ypos){
+        cars[i].changeDirection(2);
+      }else{
+        cars[i].changeDirection(3);
+      }
+    }
+  }
 }
       
       
@@ -266,7 +317,13 @@ void showDebugInfo(){
     String addStr = new String("Car Info:" + str(cars[i].index)+"\n");
     addStr = addStr.concat(str(cars[i].xpos)+"; "+ 
           str(cars[i].ypos)+ "; " + str(cars[i].xspeed) + "; " + str(cars[i].yspeed) + "\n");
-    lCarInfo.setLabel("Debugging Info:\n"+addStr);
+    String moreStr = new String("Passenger Info: \n");
+    for (int j : cars[i].passengerList) {
+      moreStr = moreStr.concat(str(passengers[j].destX) + "; " + str(passengers[j].destY) + "\n");
+    }
+    // System.out.println(moreStr);
+    
+    lCarInfo.setLabel("Debugging Info:\n"+addStr+moreStr);
   }else{
     lCarInfo.setLabel("Debugging Info:\n");
   }
