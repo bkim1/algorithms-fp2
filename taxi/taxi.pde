@@ -182,13 +182,16 @@ void ourMove(int i){
     float min_dist = Float.POSITIVE_INFINITY;
     
     // Get passenger with the shortest distance to dest
+    int numPass = 0;
     for (int j : cars[i].passengerList) {
+      if (numPass >= cars[i].numPassenger) { break; }
       Passenger p = passengers[j];
       float dist = (float)(Math.pow((Math.pow(p.destX - cars[i].xpos, 2) + Math.pow(p.destY - cars[i].ypos, 2)), 0.5));
       if (dist < min_dist) {
         min_dist = dist;
         closest = j;
       }
+      numPass++;
     }
     
     if(abs(passengers[closest].destX-cars[i].xpos) > 10){
