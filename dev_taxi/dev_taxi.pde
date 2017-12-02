@@ -186,8 +186,7 @@ void ourMove(int i){
     for (int j : cars[i].passengerList) {
       if (numPass >= cars[i].numPassenger) { break; }
       Passenger p = passengers[j];
-      float dist = (float)(Math.pow((Math.pow(p.destX - cars[i].xpos, 2) 
-                                     + Math.pow(p.destY - cars[i].ypos, 2)), 0.5));
+      float dist = (float)(Math.pow((Math.pow(p.destX - cars[i].xpos, 2) + Math.pow(p.destY - cars[i].ypos, 2)), 0.5));
       
       // Ratio for priority == 40% dist, 60% fare
       float ratio = dist * 0.4 - p.fare * 0.6;
