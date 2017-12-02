@@ -207,7 +207,7 @@ void ourMove(int i){
         cars[i].changeDirection(0);
       }else{
         cars[i].changeDirection(1);
-      }
+      } 
     }
     
     if(abs(passengers[closest].destY-cars[i].ypos) > 10){
